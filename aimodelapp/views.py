@@ -31,7 +31,7 @@ model = model.to(device)
 
 # Define a serializer
 class ResultSerializer(serializers.Serializer):
-    prediction = serializers.ListField()
+    prediction = serializers.CharField()
 
 
 @authentication_classes([JWTAuthentication])
@@ -59,14 +59,14 @@ class PredictView(views.APIView):
             preds = output.argmax(dim=1)
 
         # Process the predictions
-        if preds == 0:  # Assuming your model outputs class indices
+        if preds == 0:
             pred_label = 'Advertisement'
         elif preds == 1:
             pred_label = 'Content'
         else:
             pred_label = 'Unknown'
 
-        prediction = f"Prediction: {pred_label}"
+        prediction = pred_label
 
         results = {'prediction': prediction}
         serializer = ResultSerializer(results)
